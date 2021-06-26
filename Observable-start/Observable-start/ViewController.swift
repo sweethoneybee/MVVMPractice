@@ -12,7 +12,88 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        practice()
+        challenge1()
+        challenge2()
+    }
+    
+    
+}
 
+extension ViewController {
+    func example(of description: String, action: () -> Void) {
+        print("\n--- Example of:", description, "---")
+        action()
+    }
+}
+
+extension ViewController {
+    /// Tag: - Challenge 1
+    func challenge1() {
+        example(of: "never") {
+            let disposeBag = DisposeBag()
+            
+            let observable = Observable<Any>.never()
+            
+            observable
+                .do(
+                    onSubscribe: {
+                        print("onSubscribe")
+                    }
+                )
+                .subscribe(
+                    onNext: { element in
+                        print(element)
+                    },
+                    onCompleted: {
+                        print("Completed")
+                    },
+                    onDisposed: {
+                        print("Disposed")
+                    }
+                )
+                .disposed(by: disposeBag)
+        }
+    }
+}
+
+extension ViewController {
+    /// Tag: - Challenge 2
+    func challenge2() {
+        example(of: "never") {
+            let disposeBag = DisposeBag()
+            
+            let observable = Observable<Any>.never()
+            
+            observable
+                .debug("observable")
+                .do(
+                    onSubscribe: {
+                        print("onSubscribe")
+                    }
+                )
+                .subscribe(
+                    onNext: { element in
+                        print(element)
+                    },
+                    onCompleted: {
+                        print("Completed")
+                    },
+                    onDisposed: {
+                        print("Disposed")
+                    }
+                )
+                .disposed(by: disposeBag)
+        }
+    }
+}
+
+extension ViewController {
+    /// Tag: - Practice
+    func practice() {
+        
+        
         example(of: "Single") {
             let disposeBag = DisposeBag()
             
@@ -53,91 +134,81 @@ class ViewController: UIViewController {
                 }
                 .disposed(by: disposeBag)
         }
+                
+        example(of: "just, of, from") {
+            // 1
+            let one = 1
+            let two = 2
+            let three = 3
+            
+            // 2
+            let observable = Observable<Int>.just(one)
+            let observable2 = Observable.of(one, two, three)
+            let observable3 = Observable.of([one, two, three])
+            let observable4 = Observable.from([one, two, three])
+        }
         
+        example(of: "subscribe") {
+            let one = 1
+            let two = 2
+            let three = 3
+            
+            let observable = Observable.of(one, two, three)
+            
+            observable.subscribe(onNext: { element in
+                print(element)
+            })
+        }
         
-//        example(of: "just, of, from") {
-//            // 1
-//            let one = 1
-//            let two = 2
-//            let three = 3
-//
-//            // 2
-//            let observable = Observable<Int>.just(one)
-//            let observable2 = Observable.of(one, two, three)
-//            let observable3 = Observable.of([one, two, three])
-//            let observable4 = Observable.from([one, two, three])
-//        }
-//
-//        example(of: "subscribe") {
-//            let one = 1
-//            let two = 2
-//            let three = 3
-//
-//            let observable = Observable.of(one, two, three)
-//
-//            observable.subscribe(onNext: { element in
-//                print(element)
-//            })
-//        }
-//
-//        example(of: "empty") {
-//            let observable = Observable<Void>.empty()
-//
-//            observable.subscribe(onNext: { element in
-//                print(element)
-//            },
-//            onCompleted: {
-//                print("Completed")
-//            })
-//        }
-//
-//        example(of: "range") {
-//            let observable = Observable<Int>.range(start: 1, count: 10)
-//
-//            observable.subscribe(onNext: { i in
-//                let n = Double(i)
-//
-//                let fibonacci = Int(
-//                    ((pow(1.61803, n) - pow(0.61803, n)) /
-//                        2.23606).rounded()
-//                )
-//
-//                print(fibonacci)
-//            })
-//        }
-//
-//        example(of: "deferred") {
-//            let disposeBag = DisposeBag()
-//
-//            var flip = false
-//
-//            let factory: Observable<Int> = Observable.deferred {
-//                flip.toggle()
-//
-//                if flip {
-//                    return Observable<Int>.of(1, 2, 3)
-//                } else {
-//                    return Observable<Int>.of(4, 5, 6)
-//                }
-//            }
-//
-//            for _ in 0...3 {
-//                factory.subscribe(onNext: {
-//                    print($0, terminator: "")
-//                })
-//                .disposed(by: disposeBag)
-//
-//                print()
-//            }
-//        }
-    }
-    
-    
-}
-
-extension ViewController {
-    func example(of description: String, action: () -> Void) {
-        print("\n--- Example of:", description, "---")
-        action()
+        example(of: "empty") {
+            let observable = Observable<Void>.empty()
+            
+            observable.subscribe(onNext: { element in
+                print(element)
+            },
+            onCompleted: {
+                print("Completed")
+            })
+        }
+        
+        example(of: "range") {
+            let observable = Observable<Int>.range(start: 1, count: 10)
+            
+            observable.subscribe(onNext: { i in
+                let n = Double(i)
+                
+                let fibonacci = Int(
+                    ((pow(1.61803, n) - pow(0.61803, n)) /
+                        2.23606).rounded()
+                )
+                
+                print(fibonacci)
+            })
+        }
+        
+        example(of: "deferred") {
+            let disposeBag = DisposeBag()
+            
+            var flip = false
+            
+            let factory: Observable<Int> = Observable.deferred {
+                flip.toggle()
+                
+                if flip {
+                    return Observable<Int>.of(1, 2, 3)
+                } else {
+                    return Observable<Int>.of(4, 5, 6)
+                }
+            }
+            
+            for _ in 0...3 {
+                factory.subscribe(onNext: {
+                    print($0, terminator: "")
+                })
+                .disposed(by: disposeBag)
+                
+                print()
+            }
+        }
     }
 }
